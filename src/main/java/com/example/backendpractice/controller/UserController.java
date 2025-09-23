@@ -4,6 +4,8 @@ import com.example.backendpractice.entity.User;
 import com.example.backendpractice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import java.util.Optional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,8 +47,49 @@ public class UserController {
     
     // 根据 ID 获取用户 - GET /api/users/{id}
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userRepository.findById(id).orElse(null);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        }
+        else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // 更新用户 - PUT /api/users/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user_new) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            // 更新用户信息（保持原有的 id 和 timestamp 不变）
+            user.setUsername(user_new.getUsername());
+            user.setEmail(user_new.getEmail());
+            
+            User updateUser = userRepository.save(user);
+            return ResponseEntity.ok(updateUser);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // 删除用户 - DELETE /api/users/{id}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()){
+            // 通过 id 删除用户
+            userRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
