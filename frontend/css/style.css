@@ -1,0 +1,44 @@
+/* 全局样式重置和基础设置 */
+/* * { } - 通用选择器，选择所有元素 */
+* {
+    margin: 0;                            /* margin: 0; padding: 0 - 清除浏览器默认间距 */
+    padding: 0;
+    box-sizing: border-box;               /* box-sizing; border-box - 更直观的盒模型计算 */
+}
+
+/* 头部样式 */
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding:2rem 0;
+    margin: 0 auto 2rem auto;                /* 关键：让 header 也居中 */
+    max-width: 1200px;                       /* 与 main 保持一致的最大宽度 */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1{
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+header p{
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* body { } - 页面主体样式 */
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;           /* 设置字体 */
+    line-height: 1.6;                                                       /* 设置行高 */
+    color: #333;
+    background-color: #f4f4f4;                                            /* 设置背景色 */
+}
+
+/* 容器样式 */
+main {
+    max-width: 1200px;              /* 最大宽度 */
+    margin: 0 auto;                 /* 水平居中 */
+    padding: 0px;
+}
