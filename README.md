@@ -1,13 +1,1 @@
-# 后端学习
-
-## 2025
-
-### 9.22
-
-- 学习 pom.xml 的编写和用途
-- 创建基础的项目结构
-
-### 9.23
-
-- 学习 GET，POST, PUT, DELETE 方法
-- 学习 Entity，Repository，Controller
+# Practice-Project
