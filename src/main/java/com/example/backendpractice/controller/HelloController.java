@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -47,5 +48,20 @@ public class HelloController {
         user.put("timestamp", java.time.LocalDateTime.now().toString());
         
         return user;
+    }
+
+    // 查询参数示例 - 搜索功能
+    @GetMapping("/search")
+    public Map<String, Object> search(@RequestParam String keyword,                        // 必须参数，如果 URL 中没有会报错
+                                      @RequestParam(defaultValue = "1") int page,          // 可选参数，有默认值
+                                      @RequestParam(defaultValue = "10") int size){        // 自动类型转换 String -> int
+        Map<String, Object> result = new HashMap<>();
+        result.put("keyword", keyword);
+        result.put("page", page);
+        result.put("size", size);
+        result.put("message", "搜索关键词: " + keyword + ", 第" + page + "页, 每页" + size + "条结果");
+        result.put("timestamp", java.time.LocalDateTime.now().toString());
+
+        return result;
     }
 }
