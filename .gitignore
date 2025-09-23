@@ -1,1 +1,4 @@
 # .gitignore 文件
+
+# Maven 工作区
+target/
