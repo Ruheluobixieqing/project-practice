@@ -1,4 +1,4 @@
-<?xml version = "1.0" encoding = "UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns = "http://maven.apache.org/POM/4.0.0"
          xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation = "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -8,8 +8,8 @@
     <!-- Spring Boot 提供的父级 POM，包含了大量预配置的依赖版本 -->
     <!-- 作用：继承 Spring Boot 的默认设置，包括依赖版本管理，不用再手动指定各个依赖的版本号-->
     <parent>
-        <groupId> org.springframework.boot </groupId>
-        <artifactId> spring-boot-starter-parent </artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.0</version> 
         <relativePath/> <!-- 查找父级 POM 的路径，空表示从仓库查找 -->
     </parent>
@@ -34,25 +34,29 @@
         <!-- Spring Boot Web 启动器 -->
         <!-- 提供：Web MVC、Tomcat 服务器、JSON 处理等 -->
         <dependency>
-            <groupId>org.springframework.boot </groupId>
-            <artifactId>spring-boot-starter-web </artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
             <!-- 版本由父级 POM 管理，不需要指定 -->
         </dependency>
 
         <!-- Spring Boot JPA 启动器 -->
         <!-- 提供：Hibernate ORM、数据库连接池、事务管理等 -->
+        <!-- 暂时注释
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        -->
 
         <!-- MySQL 数据库驱动 -->
         <!-- 运行时需要，编译时不需要，所以是 runtime scope -->
+        <!-- 暂时注释
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        -->
 
         <!-- 数据校验启动器 -->
         <!-- 提供：@Valid、@NotNull、@Size 等注解支持 -->
