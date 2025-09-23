@@ -11,8 +11,8 @@ import java.util.HashMap;
 @RestController                 // 告诉 spring 这是 REST API 控制器
 @RequestMapping("/api")         // 设置基础路径
 
-// 创建一个简单的 GET 接口
 public class HelloController {
+    // 创建一个简单的 GET 接口
     @GetMapping("/hello")
     public String sayHello() {
         return "Hello!This is Bolide's first API!";
@@ -23,6 +23,7 @@ public class HelloController {
         return "I'm Bolide who is a student of NJUST.";
     }
 
+    // 创建一个 POST 接口
     @PostMapping("/greet")
     public Map<String, Object> greetUser(@RequestBody Map<String, String> userInfo){
         String name = userInfo.get("name");
