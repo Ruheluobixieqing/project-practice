@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -63,5 +65,36 @@ public class HelloController {
         result.put("timestamp", java.time.LocalDateTime.now().toString());
 
         return result;
+    }
+
+    // PUT 请求 - 更新用户信息
+    @PutMapping("/user/{id}")
+    public Map<String, Object> updateUser(@PathVariable Long id,
+                                          @RequestBody Map<String, String> userInfo){
+        String name = userInfo.get("name");
+        String email = userInfo.get("email");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", id);
+        response.put("name", name);
+        response.put("email", email);
+        response.put("message", "用户ID " + id + " 的信息已经更新");
+        response.put("operation", "UPDATE");
+        response.put("timestamp", java.time.LocalDateTime.now().toString());
+
+        return response;
+    }
+
+    // DELETE请求 - 删除用户
+    @DeleteMapping("/user/{id}")
+    public Map<String, Object> deleteUser(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", id);
+        response.put("message", "用户ID " + id + " 已被删除");
+        response.put("operation", "DELETE");
+        response.put("status", "success");
+        response.put("timestamp", java.time.LocalDateTime.now().toString());
+    
+        return response;
     }
 }
