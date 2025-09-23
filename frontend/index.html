@@ -4,8 +4,58 @@
     <meta charset="UTF-8">             <!-- 字符编码 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">          <!-- 响应式设计，适配手机 -->
     <title>用户管理系统</title>
+    <!-- 连接 css 文件 -->
+    <link rel="stylesheet" href="css/style.css">          <!-- 连接 css 样式，使页面更美观 -->
 </head>
 <body>
-    <h1>欢迎来到用户管理界面</h1>
+    <!-- 页面头部 -->
+    <header>
+        <h1>用户管理系统</h1>
+        <p>管理您的用户数据</p>                             <!-- <p></p> 是段落标签 -->
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main>
+        <!-- 添加用户区域 -->
+        <section id="add-user-section">
+            <h2>添加新用户</h2>
+            <form id="add-user-form">
+                <div>
+                    <label for="username">用户名：</label>                                <!-- for 属性：关联 label 和 input -->
+                    <input type="text" id="username" name="username" required>           <!-- type="text"：文本输入框 -->
+                </div>
+                <div>
+                    <label for="email">邮箱：</label>                                     <!-- type="email"：邮箱输入框（有格式验证）-->
+                    <input type="email" id="email" name="email" required>                <!-- required：必填字段 -->
+                </div>
+                <button type="submit">添加用户</button>
+            </form>
+        </section>
+
+        <!-- 用户列表区域 -->
+        <section id="user-list-section">
+            <h2>用户列表</h2>
+            <button id="load-user-btn">加载用户列表</button>
+
+            <!-- 用户列表表格 -->
+            <table id="user-table">
+                <thead>                                     <!-- 表头 -->
+                    <tr>
+                        <th>ID</th>
+                        <th>用户名</th>
+                        <th>邮箱</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">                    <!-- 表格主体 -->
+                    <!-- 用户数据将通过 JavaScript 动态添加至此 -->         
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- 连接 JavaScript 文件 -->
+    <script src="js/script.js"></script>
 </body>
 </html>
