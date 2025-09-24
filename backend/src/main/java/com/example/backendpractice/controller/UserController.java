@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController                   // 告诉 Spring-boot 这是一个 REST API 控制器
 @RequestMapping("/api/users")     // 指定基础路径
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired                    // Spring 自动注入 UserRepository
