@@ -124,3 +124,77 @@ table {
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* 表头样式 */
+thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* 表格单元格样式 */
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+/* 表头特殊样式 */
+th {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    white-space: nowrap;    /* 防止表头文字换行 */
+}
+
+/* 表格行悬停效果 */
+tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+/* 最后一行去除底边边框 */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 操作按钮样式 */
+td:last-child {
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* 操作按钮样式（表格内的小按钮） */
+.action-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    margin: 0 0.2rem;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 表格宽度控制 */
+th:nth-child(1), td:nth-child(1) { width: 8%; }   /* ID列 */
+th:nth-child(2), td:nth-child(2) { width: 20%; }  /* 用户名列 */
+th:nth-child(3), td:nth-child(3) { width: 30%; }  /* 邮箱列 */
+th:nth-child(4), td:nth-child(4) { width: 25%; }  /* 创建时间列 */
+th:nth-child(5), td:nth-child(5) { width: 17%; }  /* 操作列 */
