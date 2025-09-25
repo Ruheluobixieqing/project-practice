@@ -34,8 +34,22 @@ async function handleAddUser(event) {
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
 
-    if(!username || !email){
-        alert ('请输入完成的用户信息');
+    // 增强用户验证
+    if (!username || !email) {
+        alert('请输入完整的用户信息');
+        return;
+    }
+    
+    // 验证邮箱格式
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('请输入有效的邮箱地址');
+        return;
+    }
+    
+    // 验证用户名长度
+    if (username.length < 2) {
+        alert('用户名至少需要2个字符');
         return;
     }
 
@@ -136,7 +150,16 @@ function displayUsers(users) {
     tableBody.innerHTML = '';
 
     if (users.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5">暂无用户数据</td></tr>';
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 2rem; color: #666;">
+                    <div>
+                        <p style="margin-bottom: 1rem;">暂无用户数据</p>
+                        <button onclick="handleLoadUsers()" style="padding: 0.5rem 1rem;">刷新数据</button>
+                    </div>
+                </td>
+            </tr>
+        `;
         return;
     }
 
@@ -163,13 +186,94 @@ function formatDate(dateString) {
     return date.toLocaleString();
 }
 
-// 临时的编辑和删除函数
-function editUser(id) {
+async function editUser(id) {
     console.log('编辑用户:', id);
-    alert(`编辑用户 ${id} 的功能稍后实现`);
+
+    try {
+        // 先获取用户当前信息
+        const response = await fetch(`${API_BASE_URL}/users/${id}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP错误: ${response.status}`);
+        }
+    
+        const user = await response.json();
+        console.log('获取到用户信息:', user);
+
+        // 使用 prompt 获取新的用户信息（简单方式）
+        const newUsername = prompt('请输入新的用户名:', user.username);
+        if(newUsername === null) return;  // 用户取消
+
+        const newEmail = prompt('请输入新的邮箱:', user.email);
+        if(newEmail === null) return;  // 用户取消
+
+        // 验证输入
+        if(!newUsername.trim() || !newEmail.trim()) {
+            alert('用户名和邮箱不能为空');
+            return;
+        }
+        // 准备更新数据
+        const updateData = {
+            username: newUsername.trim(),
+            email: newEmail.trim()
+        };
+        
+        // 调用更新API
+        const updateResponse = await fetch(`${API_BASE_URL}/users/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateData)
+        });
+        
+        if (!updateResponse.ok) {
+            throw new Error(`HTTP错误: ${updateResponse.status}`);
+        }
+        
+        const updatedUser = await updateResponse.json();
+        console.log('用户更新成功:', updatedUser);
+        alert(`用户信息更新成功！`);
+        
+        // 刷新用户列表
+        handleLoadUsers();
+        
+    } 
+    catch (error) {
+        console.error('编辑用户失败:', error);
+        alert('编辑用户失败，请稍后重试');
+    }
 }
 
-function deleteUser(id) {
-    console.log('删除用户:', id);
-    alert(`删除用户 ${id} 的功能稍后实现`);
+async function deleteUser(id) {
+    console.log('准备删除用户:', id);
+    
+    // 确认删除操作
+    const confirmDelete = confirm(`确定要删除 ID 为 ${id} 的用户吗？此操作不可撤销！`);
+
+    if (!confirmDelete) {
+        console.log("用户取消了删除操作");
+        return;
+    }
+
+    try {
+        // 调用后端 API 删除用户
+        const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP错误: ${response.status}`);
+        }
+
+        console.log(`用户 ${id} 删除成功!`);
+        alert(`用户删除成功!`);
+
+        // 删除用户列表
+        handleLoadUsers();
+    }
+    catch (error) {
+        console.error('删除用户失败：', error);
+        alert('删除用户失败，请稍后再试');
+    }
 }
