@@ -58,8 +58,8 @@ function UserList() {
             const userData = await response.json();
             console.log('从后端获取到的用户数据: ', userData);
 
-            // // 添加 1000 ms 延迟，模拟网络延迟状况
-            // await new Promise(resolve => setTimeout(resolve, 1000));
+            // 添加 1000 ms 延迟，模拟网络延迟状况
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             setUsers(userData);       // 更新用户状态
             setLoading(false);        // 关闭加载状态
