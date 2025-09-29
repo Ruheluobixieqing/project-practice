@@ -1,4 +1,6 @@
 import './App.css';
+import React from 'react';
+import UserList from './UserList';
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
           </ul>
         </div>
       </header>
+      <UserList />
     </div>
   )
 }
