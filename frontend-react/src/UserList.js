@@ -1,4 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+{/*
+function MyComponent(){
+    // 1.组件挂载时执行一次
+    useEffect(() => {
+        console.log('组件已挂载');
+    }, []);         // 空依赖数组，表示只在组件挂载时执行一次
+
+    // 2.每次渲染都执行
+    useEffect(() => {
+        console.log('组件已重新渲染');
+    });             // 无依赖数组
+
+    // 3.当某个状态改变时执行
+    useEffect(() => {
+        console.log('users状态发生改变');
+    }, [users]);    // users 作为依赖
+}
+*/}
 
 function UserList() {
     // 创建用户状态
@@ -10,6 +29,18 @@ function UserList() {
     // 表单状态
     const [newUsername, setNewUsername] = useState('');
     const [newEmail, setNewEmail] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    // 模拟从服务器加载数据
+    useEffect(() => {
+        console.log('组件挂载，开始加载数据...');
+
+        //模拟网络请求延迟
+        setTimeout(() => {
+            console.log('数据加载完成!');
+            setLoading(false);
+        }, 2000);              // 时间单位为 ms
+    }, []);                    // 空依赖数组，只在组价挂载时加载一次
 
     // 添加用户函数
     const handleAddUser = (e) => {
@@ -36,14 +67,21 @@ function UserList() {
         setNewEmail('');
     };
 
-
-
     // 删除用户函数
     const handleDeleteUser = (id) => {
         if(window.confirm(`确定要删除用户 ID 为 ${id} 的用户吗?`)) {
             setUsers(users.filter(user => user.id !== id));
         }
     };
+
+    if (loading) {
+        return (
+            <div>
+                <h2>用户列表</h2>
+                <p>正在加载用户数据...</p>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -68,7 +106,7 @@ function UserList() {
                     <button type="submit">添加新用户</button>
                 </div>
             </form>
-            
+
             <p>当前有 {users.length} 个用户</p>  {/* 动态显示用户数量 */}
 
             <ul>
