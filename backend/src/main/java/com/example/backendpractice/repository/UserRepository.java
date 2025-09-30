@@ -12,4 +12,10 @@ public interface UserRepository extends JpaRepository<User, Long>{
     // findAll() - 查找所有用户
     // deleteById(Long id) - 根据ID删除用户
     // count() - 统计用户数量
+
+    // 根据用户名查找用户
+    Optional<User> findByUsername(String username);
+
+    // 根据邮箱查找用户
+    Optional<User> findByEmail(String email);
 }
