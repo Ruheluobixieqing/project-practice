@@ -14,8 +14,20 @@ public class User {
     @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    // 新增：密码字段
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    // 新增：用户角色
+    @Column(name = "role", nullable = false)
+    private String role = "USER";   // 默认为普通用户
+
+    // 新增：账户状态
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = true;
 
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime createdAt;
