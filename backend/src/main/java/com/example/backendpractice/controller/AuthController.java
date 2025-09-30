@@ -71,7 +71,7 @@ public class AuthController {
         try {
             String token = tokenRequest.getToken();
 
-            if (tokne == null || token.trim().isEmpty()) {
+            if (token == null || token.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body(createErrorResponse("Token不能为空"));
             }
 
@@ -93,7 +93,7 @@ public class AuthController {
                 }
             }
 
-            return ResponseEntity.badRequest().body(createErrorResponse("Token 无效"))
+            return ResponseEntity.badRequest().body(createErrorResponse("Token 无效"));
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(createErrorResponse("Token 验证失败: " + e.getMessage()));
