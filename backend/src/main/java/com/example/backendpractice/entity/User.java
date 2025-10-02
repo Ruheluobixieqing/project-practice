@@ -29,7 +29,7 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
 
-    @Column(name = "timestamp", nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     // 无参构造方法（必须有）
@@ -52,6 +52,15 @@ public class User {
     public String getEmail(){
         return email;
     }
+    public String getPassword() {
+        return password;
+    }
+    public String getRole(){
+        return role;
+    }
+    public boolean isEnabled(){
+        return enabled;
+    }
     public LocalDateTime getCreatedAt(){
         return createdAt;
     }
@@ -63,7 +72,16 @@ public class User {
     public void setEmail(String email){
         this.email = email;
     }
-    public void setTimestamp(LocalDateTime createdAt){
+    public void setPassword(String password){
+        this.password = password;
+    }
+    public void setRole(String role){
+        this.role = role;
+    }
+    public void setEnabled(boolean enabled){
+        this.enabled = enabled;
+    }
+    public void setCreatedAt(LocalDateTime createdAt){
         this.createdAt = createdAt;
     }
 

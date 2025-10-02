@@ -40,7 +40,7 @@ public class UserController {
 
         // 设置创建时间
         // 时间戳由服务器设置，而不是前端，故此处需要重新设置
-        user.setTimestamp(LocalDateTime.now());
+        user.setCreatedAt(LocalDateTime.now());
 
         // 保存到数据库
         return userRepository.save(user);
