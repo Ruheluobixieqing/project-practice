@@ -20,12 +20,12 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/**").permitAll()        // 登录相关接口，所有人均可访问
-                .requestMatchers("/api/users").permitAll()          // 用户列表，暂时开放所有人访问
-                .requestMatchers("/api/hello/**").permitAll()       // Hello 接口，开放访问
-                .requestMatchers("/favicon.ico").permitAll()        // 网站图标
-                .requestMatchers("/error").permitAll()              // 错误页面
-                .anyRequest().authenticated()                       // 其他所有请求都需要登录
+                .requestMatchers("/api/auth/**").permitAll()                        // 登录相关接口，所有人均可访问
+                .requestMatchers("/api/users", "/api/users/**").permitAll()         // 用户列表和创建用户接口，所有人均可访问   
+                .requestMatchers("/api/hello/**").permitAll()                       // Hello 接口，开放访问
+                .requestMatchers("/favicon.ico").permitAll()                        // 网站图标
+                .requestMatchers("/error").permitAll()                              // 错误页面
+                .anyRequest().authenticated()                                       // 其他所有请求都需要登录
             )
             .formLogin(form -> form.disable())                      // 禁用默认的登录表单
             .httpBasic(basic -> basic.disable())                    // 禁用 HTTP Basic 认证
