@@ -13,10 +13,16 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController                   // 告诉 Spring-boot 这是一个 REST API 控制器
 @RequestMapping("/api/users")     // 指定基础路径
 @CrossOrigin(origins = "*")
 public class UserController {
+    
+    // 静态常量（包括 Logger）
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired                    // Spring 自动注入 UserRepository
     private UserRepository userRepository;
@@ -40,21 +46,25 @@ public class UserController {
     // 创建新用户 - POST /api/users
     @PostMapping
     public User createUser(@RequestBody User user) {
-
         // username, email 字段由前端发送
         // 例如，前端会发送: {"username": "张三", "email": "zhangsan@email.com"}
+        logger.info("开始创建用户:{}", user.getUsername());
 
         // 如果用户提供了密码，则需要进行加密
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            logger.info("正在加密用户密码...");
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         // 设置创建时间
         // 时间戳由服务器设置，而不是前端，故此处需要重新设置
         user.setCreatedAt(LocalDateTime.now());
+        User saveUser = userRepository.save(user);
 
-        // 保存到数据库
-        return userRepository.save(user);
+        logger.info("用户创建成功: ID={}, 用户名={}", saveUser.getId(), saveUser.getUsername());
+
+        // 返回创建成功的用户
+        return saveUser;
     }
     
     // 根据 ID 获取用户 - GET /api/users/{id}
