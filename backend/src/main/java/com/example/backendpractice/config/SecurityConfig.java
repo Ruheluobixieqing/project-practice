@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration                          // 告诉 Spring 这是一个配置类
 @EnableWebSecurity                      // 启用 Web 安全功能
@@ -20,9 +21,14 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/**").permitAll()        // 登录相关接口，所有人均可访问
                 .requestMatchers("/api/users").permitAll()          // 用户列表，暂时开放所有人访问
-                .requestMatchers("/hello/**").permitAll()           // Hello 接口，开放访问
+                .requestMatchers("/api/hello/**").permitAll()           // Hello 接口，开放访问
                 .anyRequest().authenticated()                       // 其他所有请求都需要登录
-            );
+            )
+            .formLogin(form -> form.disable())                      // 禁用默认的登录表单
+            .httpBasic(basic -> basic.disable())                    // 禁用 HTTP Basic 认证
+            .sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            );                                                      // 设置为无状态（适合 JWT）
         return http.build();
     }
 
