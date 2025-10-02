@@ -6,6 +6,7 @@ import com.example.backendpractice.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             String username = loginRequest.getUsername();
+            String password = loginRequest.getPassword();
 
             // 检查用户名是否为空
             if (username == null || username.trim().isEmpty()) {
@@ -49,7 +51,7 @@ public class AuthController {
             User user = userOptional.get();
 
             // 验证密码
-            if (!passwordEncoder.matched(password, user.getPassword())) {
+            if (!passwordEncoder.matches(password, user.getPassword())) {
                 return ResponseEntity.badRequest().body(createErrorResponse("密码错误"));
             }
 
@@ -136,6 +138,7 @@ public class AuthController {
     // 内部类：登录请求
     public static class LoginRequest {
         private String username;
+        private String password;
 
         public String getUsername() {
             return username;
@@ -143,6 +146,14 @@ public class AuthController {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
     }
 

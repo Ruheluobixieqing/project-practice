@@ -5,6 +5,7 @@ import com.example.backendpractice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired                    // Spring 自动注入 UserRepository
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // 添加各种 API 方法
 
@@ -37,6 +41,11 @@ public class UserController {
 
         // username, email 字段由前端发送
         // 例如，前端会发送: {"username": "张三", "email": "zhangsan@email.com"}
+
+        // 如果用户提供了密码，则需要进行加密
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
 
         // 设置创建时间
         // 时间戳由服务器设置，而不是前端，故此处需要重新设置
