@@ -2,3 +2,6 @@
 
 # Maven 工作区
 backend/target/
+
+# 忽略日志
+backend/logs/
