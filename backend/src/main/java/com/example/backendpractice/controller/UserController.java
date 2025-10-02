@@ -48,11 +48,11 @@ public class UserController {
     public User createUser(@RequestBody User user) {
         // username, email 字段由前端发送
         // 例如，前端会发送: {"username": "张三", "email": "zhangsan@email.com"}
-        logger.info("Creating user: {}", user.getUsername());
+        logger.info("开始创建用户: {}", user.getUsername());
 
         // 如果用户提供了密码，则需要进行加密
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            logger.info("Encrypting user password...");
+            logger.info("正在加密用户密码...");
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
@@ -61,7 +61,7 @@ public class UserController {
         user.setCreatedAt(LocalDateTime.now());
         User saveUser = userRepository.save(user);
 
-        logger.info("User created successfully: ID={}, username={}", saveUser.getId(), saveUser.getUsername());
+        logger.info("用户创建成功: ID={}, 用户名={}", saveUser.getId(), saveUser.getUsername());
 
         // 返回创建成功的用户
         return saveUser;
