@@ -4,4 +4,4 @@
 backend/target/
 
 # 忽略日志
-backend/logs/
+logs/
