@@ -5,6 +5,8 @@ import com.example.backendpractice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
     // Spring会自动提供以下基本方法：
@@ -29,8 +31,11 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     // 较为复杂的查询需要 @Query 注释，手动实现
 
-    // 根据用户名查找用户
+    // 根据用户名查找单个用户
     Optional<User> findByUsername(String username);
+
+    // 根据用户名查找所有匹配的用户
+    List<User> findAllByUsername(String username);
 
     // 根据邮箱查找用户
     Optional<User> findByEmail(String email);
