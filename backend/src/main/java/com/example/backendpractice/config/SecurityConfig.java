@@ -8,10 +8,15 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration                          // 告诉 Spring 这是一个配置类
 @EnableWebSecurity                      // 启用 Web 安全功能
 public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean                               // 告诉 Spring 这个方法会创建一个重要对象
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -21,7 +26,7 @@ public class SecurityConfig {
             .cors(cors -> cors.disable())
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/**").permitAll()                        // 登录相关接口，所有人均可访问
-                .requestMatchers("/api/users", "/api/users/**").permitAll()         // 用户列表和创建用户接口，所有人均可访问   
+                .requestMatchers("/api/users", "/api/users/").permitAll()         // 用户列表和创建用户接口，所有人均可访问   
                 .requestMatchers("/api/hello/**").permitAll()                       // Hello 接口，开放访问
                 .requestMatchers("/favicon.ico").permitAll()                        // 网站图标
                 .requestMatchers("/error").permitAll()                              // 错误页面
@@ -31,7 +36,8 @@ public class SecurityConfig {
             .httpBasic(basic -> basic.disable())                    // 禁用 HTTP Basic 认证
             .sessionManagement(session -> 
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );                                                      // 设置为无状态（适合 JWT）
+            )                                                      // 设置为无状态（适合 JWT）
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
