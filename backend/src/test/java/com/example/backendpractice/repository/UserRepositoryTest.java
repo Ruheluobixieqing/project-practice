@@ -7,7 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
+
 import java.util.Optional;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -123,5 +125,26 @@ public class UserRepositoryTest {
             userRepository.save(user2);
             userRepository.flush();                               // 强制执行 SQL，触发约束检查
         });
+    }
+
+    @Test
+    @DisplayName("应该能够查找到所有用户名相同的用户")
+    public void shouldFindAllUsersWithSameUsername() {
+        // 1.准备测试数据
+        User user1 = new User("commonuser", "user1@example.com", "password123", "USER", true, LocalDateTime.now());
+        User user2 = new User("commonuser", "user2@example.com", "password123", "USER", true, LocalDateTime.now());
+        User user3 = new User("commonuser", "user3@example.com", "password123", "USER", true, LocalDateTime.now());
+
+        // 保存用户
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        // 2.执行测试操作
+        List<User> foundUsers = userRepository.findAllByUsername("commonuser");
+        
+        // 3.验证结果 (Assert)
+        assertEquals(3, foundUsers.size());
+        assertTrue(foundUsers.stream().allMatch(u -> "commonuser".equals(u.getUsername())));
     }
 }
