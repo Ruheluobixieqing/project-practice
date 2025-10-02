@@ -36,9 +36,12 @@ public class User {
     public User() {}
 
     // 有参构造方法（ id 自动生成，故不包含）
-    public User(String username, String email, LocalDateTime createdAt){
+    public User(String username, String email, String password, String role, boolean enabled, LocalDateTime createdAt){
         this.username = username;
         this.email = email;
+        this.password = password;
+        this.role = role;
+        this.enabled = enabled;
         this.createdAt = createdAt;
     }
 
