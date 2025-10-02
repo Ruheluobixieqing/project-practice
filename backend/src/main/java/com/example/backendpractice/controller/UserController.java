@@ -67,6 +67,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile() {
+        // 该接口应该只有登录的用户可以访问
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "这是受保护的用户资料接口");
+        response.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.ok(response);
+    }
+
     // 更新用户 - PUT /api/users/{id}
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user_new) {
