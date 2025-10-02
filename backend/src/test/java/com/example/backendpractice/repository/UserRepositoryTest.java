@@ -23,13 +23,7 @@ public class UserRepositoryTest {
     @DisplayName("应该能够保存用户")
     public void shouldSaveUser() {
         // 1.准备测试数据 (Arrange)
-        User user = new User();
-        user.setUsername("testuser");
-        user.setEmail("test@example.com");
-        user.setPassword("password123");
-        user.setRole("USER");
-        user.setEnabled(true);
-        user.setCreatedAt(LocalDateTime.now());
+        User user = new User("testuser", "test@example.com", "password123", "USER", true, LocalDateTime.now());
 
         // 2.执行测试操作 (Act)
         User savedUser = userRepository.save(user);
@@ -66,5 +60,52 @@ public class UserRepositoryTest {
         assertEquals("findtest", foundUser.get().getUsername());                    // 验证用户名
         assertEquals("findtest@example.com", foundUser.get().getEmail());           // 验证邮箱
         assertEquals("password123", foundUser.get().getPassword());                 // 验证密码
+    }
+
+    @Test
+    @DisplayName("应该能根据邮箱查找用户")
+    public void shouldFindUserByEmail() {
+        // 1.准备测试数据 (Arrange)
+        User user = new User();
+        user.setUsername("findtest");
+        user.setEmail("findtest@example.com");
+        user.setPassword("password123");
+        user.setRole("USER");
+        user.setEnabled(true);
+        user.setCreatedAt(LocalDateTime.now());
+
+        // 先保存用户
+        userRepository.save(user);
+
+        // 2.执行测试操作 (Act)
+        Optional<User> foundUser = userRepository.findByEmail("findtest@example.com");
+
+        // 3.验证结果 (Assert)
+        assertTrue(foundUser.isPresent());                                          // 验证找到了用户
+        assertEquals("findtest", foundUser.get().getUsername());                    // 验证用户名
+        assertEquals("findtest@example.com", foundUser.get().getEmail());           // 验证邮箱
+        assertEquals("password123", foundUser.get().getPassword());                 // 验证密码
+    }
+
+    @Test
+    @DisplayName("应该允许相同用户名但不同邮箱的用户")
+    public void shouldAllowSameUsernameDifferentEmail() {
+        // 1.准备测试数据 (Arrange)
+        // 创建相同用户名但是不同邮箱的用户
+        User user1 = new User("sameuser", "user1@example.com", "password123", "USER", true, LocalDateTime.now());
+        User user2 = new User("sameuser", "user2@example.com", "password123", "USER", true, LocalDateTime.now());
+
+        // 2.执行测试操作 (Act)
+        User savedUser1 = userRepository.save(user1);
+        User savedUser2 = userRepository.save(user2);
+
+        // 3.验证结果
+        assertNotNull(savedUser1.getId());
+        assertNotNull(savedUser2.getId());
+        assertNotEquals(savedUser1.getId(), savedUser2.getId());
+        assertEquals("sameuser", savedUser1.getUsername());
+        assertEquals("sameuser", savedUser2.getUsername());
+        assertEquals("user1@example.com", savedUser1.getEmail());
+        assertEquals("user2@example.com", savedUser2.getEmail());
     }
 }
