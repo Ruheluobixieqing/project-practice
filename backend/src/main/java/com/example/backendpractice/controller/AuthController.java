@@ -21,6 +21,9 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /** 
      * 用户登录接口
      * 简化版本：只需要用户名即可登录（暂时跳过密码验证）
@@ -44,6 +47,11 @@ public class AuthController {
             }
 
             User user = userOptional.get();
+
+            // 验证密码
+            if (!passwordEncoder.matched(password, user.getPassword())) {
+                return ResponseEntity.badRequest().body(createErrorResponse("密码错误"));
+            }
 
             // 生成 JWT Token
             String token = jwtUtil.generateToken(user.getUsername());
