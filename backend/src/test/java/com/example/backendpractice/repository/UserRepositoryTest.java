@@ -42,4 +42,29 @@ public class UserRepositoryTest {
         assertEquals("USER", savedUser.getRole());                    // 判断角色
         assertTrue(savedUser.isEnabled());                            // 判断是否启用
     }
+
+    @Test
+    @DisplayName("应该能够根据用户名查找用户")
+    public void shouldFindUserByUsername() {
+        // 1.准备测试数据 (Arrange)
+        User user = new User();
+        user.setUsername("findtest");
+        user.setEmail("findtest@example.com");
+        user.setPassword("password123");
+        user.setRole("USER");
+        user.setEnabled(true);
+        user.setCreatedAt(LocalDateTime.now());
+
+        // 先保存用户
+        userRepository.save(user);
+
+        // 2.执行测试操作 (Act)
+        Optional<User> foundUser = userRepository.findByUsername("findtest");
+
+        // 3.验证结果 (Assert)
+        assertTrue(foundUser.isPresent());                                          // 验证找到了用户
+        assertEquals("findtest", foundUser.get().getUsername());                    // 验证用户名
+        assertEquals("findtest@example.com", foundUser.get().getEmail());           // 验证邮箱
+        assertEquals("password123", foundUser.get().getPassword());                 // 验证密码
+    }
 }
