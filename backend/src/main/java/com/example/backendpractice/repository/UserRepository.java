@@ -14,6 +14,21 @@ public interface UserRepository extends JpaRepository<User, Long>{
     // deleteById(Long id) - 根据ID删除用户
     // count() - 统计用户数量
 
+    // Spring Data JPA 会根据方法名自动生成实现
+
+    // 查询关键词：
+    // findBy - 查询
+    // countBy - 计数
+    // deleteBy - 删除
+    // existBy - 存在性检查
+
+    // 字段连接
+    // findByUsername - 根据 username 字段查询
+    // findByEmail - 根据 username 字段查询
+    // findByUsernameAndEmail - 根据 username AND email 查询
+
+    // 较为复杂的查询需要 @Query 注释，手动实现
+
     // 根据用户名查找用户
     Optional<User> findByUsername(String username);
 
