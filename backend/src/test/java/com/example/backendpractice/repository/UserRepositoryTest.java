@@ -108,4 +108,20 @@ public class UserRepositoryTest {
         assertEquals("user1@example.com", savedUser1.getEmail());
         assertEquals("user2@example.com", savedUser2.getEmail());
     }
+
+    @Test
+    @DisplayName("不应该允许相同邮箱但不同用户名")
+    public void shouldNotAllowSameEmailDifferentUsername() {
+        // 1.准备测试数据 (Arrange)
+        // 创建相同邮箱但是不同用户名的用户
+        User user1 = new User("user1", "same@example.com", "password123", "USER", true, LocalDateTime.now());
+        User user2 = new User("user2", "same@example.com", "password123", "USER", true, LocalDateTime.now());
+
+        // 2.执行测试操作
+        User savedUser1 = userRepository.save(user1);             // 第一个用户应该成功
+        assertThrows(Exception.class, () -> {
+            userRepository.save(user2);
+            userRepository.flush();                               // 强制执行 SQL，触发约束检查
+        });
+    }
 }
