@@ -18,6 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import org.mockito.ArgumentCaptor;
 
 @ExtendWith(MockitoExtension.class)                           // 启用 Mockito 框架，类似 Respository 测试中的 @DataJpaTest
 @DisplayName("用户Service测试")
@@ -106,5 +107,40 @@ public class UserServiceTest {
         verify(userRepository).findByEmail("test@example.com");
         verify(userRepository, never()).save(any(User.class));
         verify(passwordEncoder, never()).encode(anyString());
+    }
+
+    @Test
+    @DisplayName("应该正确设置用户的默认值")
+    public void shouldSetDefaultValues() {
+        
+        testUser.setRole(null);                    // 不设置角色，让 Service 设置默认值
+        User savedUser = new User("testuser", "test@example.com", "encodedPassword", "USER", true, LocalDateTime.now());
+
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+        when(passwordEncoder.encode("rawPassword")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        User result = userService.createUser(testUser);
+
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+
+        User capturedUser = userCaptor.getValue();
+        assertEquals("USER", capturedUser.getRole());                   // 验证默认角色
+        assertTrue(capturedUser.isEnabled());                           // 验证默认启用状态
+        assertNotNull(capturedUser.getCreatedAt());                     // 验证创建时间被设置
+        assertEquals("encodedPassword", capturedUser.getPassword());    // 验证密码被加密
+
+        assertNotNull(result);
+        assertEquals("testuser", result.getUsername());
+    }
+
+    @Test
+    @DisplayName("验证用户创建数据 - 用户为 null 时应该抛出异常")
+    public void shouldThrowExceptionWhenUserIsNull() {
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserForCreation(null));
+
+        assertEquals("用户信息不能为空！", exception.getMessage());
     }
 }
