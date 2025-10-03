@@ -162,7 +162,7 @@ public class UserService {
     
         // 检查用户是否存在
         if (!userRepository.existsById(id)) {
-            throw new IllegalArgumentException("用户不存在，ID: " + id);
+            throw new IllegalArgumentException("用户不存在, ID: " + id);
         }
     
         userRepository.deleteById(id);

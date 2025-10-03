@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping
     public List<User> getAllUsers() {
         // 获取所有用户方法
-        return userRepository.findAll();      // Repository的findAll()方法是Spring Data JPA自动提供的，无需手写SQL
+        return userService.getAllUsers();
     }
 
     @PostMapping
