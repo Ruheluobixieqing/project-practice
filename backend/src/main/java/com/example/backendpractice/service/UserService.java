@@ -75,4 +75,13 @@ public class UserService {
             throw new IllegalArgumentException("邮箱不能为空！");
         }
     }
+
+    /** 
+     * 获取所有用户
+     * @return 用户列表
+     */
+    public List<User> getAllUsers() {
+        logger.info("获取所有用户列表");
+        return userRepository.findAll();
+    }
 }
