@@ -86,4 +86,25 @@ public class UserServiceTest {
         verify(passwordEncoder).encode("rawPassword");
         verify(userRepository).save(any(User.class));
     }
+
+    @Test
+    @DisplayName("当邮箱已经存在时应该抛出异常")
+    public void shouldThrowExceptionWhenEmailExists() {
+        // 1.准备测试数据 (Arrange)
+        User existingUser = new User("existing", "test@example.com", "password", "USER", true, LocalDateTime.now());
+
+        // 2.设置 Mock 行为 - 模拟邮箱已存在
+        when(userRepository.findByEmail(existingUser.getEmail())).thenReturn(Optional.of(existingUser));
+
+        // 3.执行测试并验证异常 (Ack & Assert)
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.createUser(testUser));
+
+        // 4.验证异常信息
+        assertEquals("邮箱已经存在，请勿重复创建！", exception.getMessage());
+
+        // 5.验证交互 - 应该检查了邮箱，但不应该保存用户
+        verify(userRepository).findByEmail("test@example.com");
+        verify(userRepository, never()).save(any(User.class));
+        verify(passwordEncoder, never()).encode(anyString());
+    }
 }
