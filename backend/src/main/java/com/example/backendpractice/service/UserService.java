@@ -101,6 +101,54 @@ public class UserService {
     }
 
     /**
+     * 更新用户信息
+     * @param id 用户 ID
+     * @param updateUser 更新的用户信息
+     * @return 更新后的用户信息
+     * @throws IllegalArgumentException 当用户不存在或数据无效时
+     */
+    public User updateUser(Long id, User updateUser) {
+        logger.info("更新用户信息: ID={}", id);
+
+        // 验证参数
+        if (id == null) {
+            throw new IllegalArgumentException("用户 ID 不能为空！");
+        }
+        if (updateUser == null) {
+            throw new IllegalArgumentException("用于更新的用户信息不能为空！");
+        }
+
+        // 查找现有用户
+        Optional<User> existingUser = userRepository.findById(id);
+        if (!existingUser.isPresent()) {
+            throw new IllegalArgumentException("ID={} 的用户不存在！", id);
+        }
+
+        User existingUser = existingUser.get();
+
+        // 更新用户信息
+        if (updateUser.getUsername() != null && !updateUser.getUsername().trim().isEmpty()) {
+            existingUser.setUsername(updateUser.getUsername());
+        }
+        if (updateUser.getEmail() != null && !updateUser.getEmail().trim().isEmpty()) {
+            // 检查新邮箱是否已被其他用占用
+            Optional<User> userWithEmail = userRepository.findByEmail(updateUser.getEmail());
+            if (userWithEmail.isPresent() && userWithEmail.get().getId().equals(id)) {
+                throw new IllegalArgumentException("该邮箱已被其他用户使用！");
+            }
+            existingUser.setEmail(updateUser.getEmail());
+        }
+        existingUser.setPassword(updateUser.getPassword());
+        existingUser.setRole(updateUser.getRole());
+        existingUser.setEnabled(updateUser.isEnabled());
+
+        User savedUser = userRepository.save(existingUser);
+        logger.info("用户信息更新成功！ID={}, 用户名={}", savedUser.getId(), savedUser.getUsername());
+    
+        return savedUser;
+    }
+
+    /**
      * 删除用户
      * @param id 用户ID
      * @throws IllegalArgumentException 当用户不存在时
