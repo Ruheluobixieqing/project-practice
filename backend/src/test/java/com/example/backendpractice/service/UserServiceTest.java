@@ -143,4 +143,43 @@ public class UserServiceTest {
 
         assertEquals("用户信息不能为空！", exception.getMessage());
     }
+
+    @Test
+    @DisplayName("验证用户创建数据 - 用户名为空时应该抛出异常")
+    public void shouldThrowExceptionWhenUsernameisEmpty() {
+        
+        User user = new User();
+        user.setUsername("");
+        user.setEmail("test@example.com");
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserForCreation(user));
+
+        assertEquals("用户名不能为空！", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("验证用户创建数据 - 用户名为空白时应该抛出异常")
+    public void shouldThrowExceptionWhenUsernameIsBlank() {
+        
+        User user = new User();
+        user.setUsername("   ");
+        user.setEmail("test@example.com");
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserForCreation(user));
+
+        assertEquals("用户名不能为空！", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("验证用户创建数据 - 邮箱为空时应该抛出异常")
+    public void shouldThrowExceptionWhenEmailIsEmpty() {
+        
+        User user = new User();
+        user.setUsername("testuser");
+        user.setEmail("");  // 空字符串
+    
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.validateUserForCreation(user));
+    
+        assertEquals("邮箱不能为空！", exception.getMessage());
+    }
 }
