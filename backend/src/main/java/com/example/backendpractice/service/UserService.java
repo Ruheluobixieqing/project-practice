@@ -99,4 +99,26 @@ public class UserService {
         
         return userRepository.findById(id);
     }
+
+    /**
+     * 删除用户
+     * @param id 用户ID
+     * @throws IllegalArgumentException 当用户不存在时
+     */
+    public void deleteUser(Long id) {
+        logger.info("删除用户: ID={}", id);
+    
+        if (id == null) {
+            throw new IllegalArgumentException("用户ID不能为空");
+        }
+    
+        // 检查用户是否存在
+        if (!userRepository.existsById(id)) {
+            throw new IllegalArgumentException("用户不存在，ID: " + id);
+        }
+    
+        userRepository.deleteById(id);
+        logger.info("用户删除成功: ID={}", id);
+    }
+
 }
