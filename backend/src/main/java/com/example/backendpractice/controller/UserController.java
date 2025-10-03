@@ -46,29 +46,6 @@ public class UserController {
         return userRepository.findAll();      // Repository的findAll()方法是Spring Data JPA自动提供的，无需手写SQL
     }
 
-    // 创建新用户 - POST /api/users
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-
-        logger.info("开始创建用户: {}", user.getUsername());
-
-        // 如果用户提供了密码，则需要进行加密
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            logger.info("正在加密用户密码...");
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        // 设置创建时间
-        // 时间戳由服务器设置，而不是前端，故此处需要重新设置
-        user.setCreatedAt(LocalDateTime.now());
-        User saveUser = userRepository.save(user);
-
-        logger.info("用户创建成功: ID={}, 用户名={}", saveUser.getId(), saveUser.getUsername());
-
-        // 返回创建成功的用户
-        return saveUser;
-    }
-
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
 
@@ -77,7 +54,11 @@ public class UserController {
             return ResponseEntity.ok(savedUser);
         }
         catch (IllegalArgumentException e) {
-
+            // 返回 400 错误和错误信息
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
     
