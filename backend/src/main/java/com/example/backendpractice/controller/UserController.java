@@ -65,12 +65,20 @@ public class UserController {
     // 根据 ID 获取用户 - GET /api/users/{id}
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
+        try {
+            Optional<User> user = userService.getUserById(id);
+            if (user.isPresent()) {
+                return ResponseEntity.ok(user.get());
+            }
+            else {
+                return ResponseEntity.notFound().build();
+            }
         }
-        else{
-            return ResponseEntity.notFound().build();
+        catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 
@@ -86,20 +94,15 @@ public class UserController {
     // 更新用户 - PUT /api/users/{id}
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user_new) {
-        Optional<User> optionalUser = userRepository.findById(id);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            // 更新用户信息（保持原有的 id 和 timestamp 不变）
-            user.setUsername(user_new.getUsername());
-            user.setEmail(user_new.getEmail());
-            
-            User updateUser = userRepository.save(user);
-            return ResponseEntity.ok(updateUser);
+        try {
+            User updatedUser = userService.updateUser(id, user_new);
+            return ResponseEntity.ok(updatedUser);
         }
-        else {
-            return ResponseEntity.notFound().build();
+        catch (IllegalArgumentException e){
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 
