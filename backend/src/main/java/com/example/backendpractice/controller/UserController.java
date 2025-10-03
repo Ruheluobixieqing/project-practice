@@ -109,15 +109,18 @@ public class UserController {
     // 删除用户 - DELETE /api/users/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-
-        if (optionalUser.isPresent()){
-            // 通过 id 删除用户
-            userRepository.deleteById(id);
-            return ResponseEntity.ok().build();
+        try {
+            userService.deleteUser(id);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "用户删除成功");
+            return ResponseEntity.ok(response);
         }
-        else {
-            return ResponseEntity.notFound().build();
+        catch (IllegalArgumentException e){
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 
