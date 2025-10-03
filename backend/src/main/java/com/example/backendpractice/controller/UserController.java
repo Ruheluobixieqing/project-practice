@@ -30,6 +30,9 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserService userService;
+
     // 添加各种 API 方法
 
     // GetMapping 用于处理 HTTP GET 请求
@@ -46,8 +49,7 @@ public class UserController {
     // 创建新用户 - POST /api/users
     @PostMapping
     public User createUser(@RequestBody User user) {
-        // username, email 字段由前端发送
-        // 例如，前端会发送: {"username": "张三", "email": "zhangsan@email.com"}
+
         logger.info("开始创建用户: {}", user.getUsername());
 
         // 如果用户提供了密码，则需要进行加密
@@ -65,6 +67,18 @@ public class UserController {
 
         // 返回创建成功的用户
         return saveUser;
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+
+        try {
+            User savedUser = userService.createUser(user);
+            return ResponseEntity.ok(savedUser);
+        }
+        catch (IllegalArgumentException e) {
+
+        }
     }
     
     // 根据 ID 获取用户 - GET /api/users/{id}
