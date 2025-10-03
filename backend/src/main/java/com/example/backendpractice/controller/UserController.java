@@ -1,11 +1,10 @@
 package com.example.backendpractice.controller;
 
 import com.example.backendpractice.entity.User;
-import com.example.backendpractice.repository.UserRepository;
+import com.example.backendpractice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import java.time.LocalDateTime;
@@ -23,12 +22,6 @@ public class UserController {
     
     // 静态常量（包括 Logger）
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    @Autowired                    // Spring 自动注入 UserRepository
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService userService;
@@ -64,7 +57,7 @@ public class UserController {
     
     // 根据 ID 获取用户 - GET /api/users/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
             Optional<User> user = userService.getUserById(id);
             if (user.isPresent()) {
@@ -93,7 +86,7 @@ public class UserController {
 
     // 更新用户 - PUT /api/users/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user_new) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user_new) {
         try {
             User updatedUser = userService.updateUser(id, user_new);
             return ResponseEntity.ok(updatedUser);
@@ -108,7 +101,7 @@ public class UserController {
 
     // 删除用户 - DELETE /api/users/{id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
             Map<String, Object> response = new HashMap<>();
