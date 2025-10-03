@@ -121,14 +121,14 @@ public class UserService {
         // 查找现有用户
         Optional<User> existingUser = userRepository.findById(id);
         if (!existingUser.isPresent()) {
-            throw new IllegalArgumentException("ID={} 的用户不存在！", id);
+            throw new IllegalArgumentException("ID=" + id + " 的用户不存在！");
         }
 
-        User existingUser = existingUser.get();
+        User user = existingUser.get();
 
         // 更新用户信息
         if (updateUser.getUsername() != null && !updateUser.getUsername().trim().isEmpty()) {
-            existingUser.setUsername(updateUser.getUsername());
+            user.setUsername(updateUser.getUsername());
         }
         if (updateUser.getEmail() != null && !updateUser.getEmail().trim().isEmpty()) {
             // 检查新邮箱是否已被其他用占用
@@ -136,13 +136,13 @@ public class UserService {
             if (userWithEmail.isPresent() && userWithEmail.get().getId().equals(id)) {
                 throw new IllegalArgumentException("该邮箱已被其他用户使用！");
             }
-            existingUser.setEmail(updateUser.getEmail());
+            user.setEmail(updateUser.getEmail());
         }
-        existingUser.setPassword(updateUser.getPassword());
-        existingUser.setRole(updateUser.getRole());
-        existingUser.setEnabled(updateUser.isEnabled());
+        user.setPassword(updateUser.getPassword());
+        user.setRole(updateUser.getRole());
+        user.setEnabled(updateUser.isEnabled());
 
-        User savedUser = userRepository.save(existingUser);
+        User savedUser = userRepository.save(user);
         logger.info("用户信息更新成功！ID={}, 用户名={}", savedUser.getId(), savedUser.getUsername());
     
         return savedUser;
