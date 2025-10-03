@@ -84,4 +84,19 @@ public class UserService {
         logger.info("获取所有用户列表");
         return userRepository.findAll();
     }
+
+    /**
+     * 根据 ID 获取用户
+     * @param id 用户 ID
+     * @return 用户信息，若不存在则返回空
+     */
+    public Optional<User> getUserById(Long id) {
+        logger.info("根据 ID 获取用户: {}", id);
+
+        if( id == null) {
+            throw new IllegalArgumentException("用户 ID 不能为空!");
+        }
+        
+        return userRepository.findById(id);
+    }
 }
