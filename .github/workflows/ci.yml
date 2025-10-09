@@ -31,7 +31,7 @@ jobs:
     
     # 3. 缓存Maven依赖（提高构建速度）
     - name: 📦 Cache Maven packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -57,7 +57,7 @@ jobs:
     
     # 7. 上传测试报告（即使测试失败也会执行）
     - name: 📊 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results
@@ -65,7 +65,7 @@ jobs:
     
     # 8. 上传构建产物
     - name: 📤 Upload JAR
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: jar-artifact
         path: backend/target/*.jar
@@ -100,7 +100,7 @@ jobs:
     
     # 上传覆盖率报告
     - name: 📊 Upload coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: backend/target/site/jacoco/
