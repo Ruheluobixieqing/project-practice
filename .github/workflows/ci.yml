@@ -8,6 +8,15 @@ on:
   pull_request:
     branches: [ main, master ]
 
+# 环境变量 - 优化构建性能
+# --batch-mode 减少输出，加快构建
+# --errors 只显示错误信息
+# --fail-at-end 让所有模块都尝试构建
+env:
+  JAVA_VERSION: '21'
+  MAVEN_OPTS: '-Xmx1024m -XX:+UseParallelGC'
+  MAVEN_CLI_OPTS: '--batch-mode --errors --fail-at-end --show-version' 
+
 # 定义任务
 jobs:
   test:
@@ -41,19 +50,19 @@ jobs:
     - name: 🔧 Compile project
       run: |
         cd backend
-        mvn clean compile
+        mvn ${{ env.MAVEN_CLI_OPTS }} clean compile
     
     # 5. 运行测试
     - name: 🧪 Run tests
       run: |
         cd backend
-        mvn test
+        mvn ${{ env.MAVEN_CLI_OPTS }} test
     
     # 6. 构建项目
     - name: 📦 Build project
       run: |
         cd backend
-        mvn package -DskipTests
+        mvn ${{ env.MAVEN_CLI_OPTS }} package -DskipTests
     
     # 7. 上传测试报告（即使测试失败也会执行）
     - name: 📊 Upload test results
