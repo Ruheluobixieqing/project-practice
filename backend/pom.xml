@@ -138,6 +138,23 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
+
+                <!-- 插件级配置：对任何触发方式都生效 -->
+                <configuration>
+                    <rules>
+                        <rule>
+                            <element>BUNDLE</element>
+                            <limits>
+                                <limit>
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.05</minimum> <!-- 5% 要求 -->
+                                </limit>
+                            </limits>
+                        </rule>
+                    </rules>
+                </configuration>
+
                 <executions>
                     <!-- 准备代理 -->
                     <execution>
@@ -145,6 +162,7 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
                     <!-- 生成报告 -->
                     <execution>
                         <id>report</id>
@@ -153,26 +171,13 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+
                     <!-- 检查覆盖率 -->
                     <execution>
                         <id>check</id>
                         <goals>
                             <goal>check</goal>
                         </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.05</minimum> <!-- 5%覆盖率要求（极低，仅供初期测试使用） -->
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
