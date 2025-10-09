@@ -51,20 +51,33 @@ jobs:
       run: |
         cd backend
         mvn ${{ env.MAVEN_CLI_OPTS }} clean compile
+
+    # 5. 检查编译警告
+    - name: ⚠️ Check compilation warnings
+      run: |
+        cd backend
+        mvn ${{ env.MAVEN_CLI_OPTS }} compile 2>&1 | tee compile.log
+        if grep -i "warning" compile.log; then
+            echo "⚠️ 发现编译警告，请修复后再提交"
+            grep -i "warning" compile.log
+            exit 1
+        else
+            echo "✅ 编译无警告"
+        fi
     
-    # 5. 运行测试
+    # 6. 运行测试
     - name: 🧪 Run tests
       run: |
         cd backend
         mvn ${{ env.MAVEN_CLI_OPTS }} test
     
-    # 6. 构建项目
+    # 7. 构建项目
     - name: 📦 Build project
       run: |
         cd backend
         mvn ${{ env.MAVEN_CLI_OPTS }} package -DskipTests
     
-    # 7. 上传测试报告（即使测试失败也会执行）
+    # 8. 上传测试报告（即使测试失败也会执行）
     - name: 📊 Upload test results
       uses: actions/upload-artifact@v4
       if: always()
@@ -72,7 +85,7 @@ jobs:
         name: test-results
         path: backend/target/surefire-reports/
     
-    # 8. 上传构建产物
+    # 9. 上传构建产物
     - name: 📤 Upload JAR
       uses: actions/upload-artifact@v4
       with:
@@ -113,3 +126,9 @@ jobs:
       with:
         name: coverage-report
         path: backend/target/site/jacoco/
+
+    # 检查覆盖率阈值
+    - name: 🎯 Check coverage threshold
+      run: |
+        cd backend
+        mvn jacoco:check
