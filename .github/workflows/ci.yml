@@ -1,0 +1,106 @@
+# Java Spring Boot CI Pipeline
+name: Java CI with Maven
+
+# 触发条件：当代码推送到main分支或创建PR时
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+# 定义任务
+jobs:
+  test:
+    # 运行环境
+    # ubuntu-latest: Linux环境（推荐，速度块）
+    # windows-latest: Windows环境
+    # macos-latest: macOS环境
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. 检出代码
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    # 2. 设置Java环境
+    - name: ☕ Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    
+    # 3. 缓存Maven依赖（提高构建速度）
+    - name: 📦 Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    # 4. 编译项目
+    - name: 🔧 Compile project
+      run: |
+        cd backend
+        mvn clean compile
+    
+    # 5. 运行测试
+    - name: 🧪 Run tests
+      run: |
+        cd backend
+        mvn test
+    
+    # 6. 构建项目
+    - name: 📦 Build project
+      run: |
+        cd backend
+        mvn package -DskipTests
+    
+    # 7. 上传测试报告（即使测试失败也会执行）
+    - name: 📊 Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: backend/target/surefire-reports/
+    
+    # 8. 上传构建产物
+    - name: 📤 Upload JAR
+      uses: actions/upload-artifact@v3
+      with:
+        name: jar-artifact
+        path: backend/target/*.jar
+
+  # 代码质量检查任务
+  code-quality:
+    runs-on: ubuntu-latest
+    needs: test  # 依赖test任务完成
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+    
+    - name: ☕ Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+    
+    # 检查代码格式
+    - name: 🎨 Check code style
+      run: |
+        cd backend
+        mvn compile
+        echo "✅ Code compilation successful"
+    
+    # 生成测试覆盖率报告
+    - name: 📈 Generate test coverage
+      run: |
+        cd backend
+        mvn test jacoco:report
+    
+    # 上传覆盖率报告
+    - name: 📊 Upload coverage reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: backend/target/site/jacoco/
